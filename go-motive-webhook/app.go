@@ -11,6 +11,12 @@ type Token struct {
 	Value string `json:"token"`
 }
 
+var events = map[string][]string{
+	"vehicles": {"https://eoww187fd6vl0sa.m.pipedream.net"},
+	"drivers":  {"https://eoww187fd6vl0sa.m.pipedream.net"},
+	"trailers": {"https://eoww187fd6vl0sa.m.pipedream.net"},
+}
+
 func main() {
 	// Define the routes
 	http.HandleFunc("/", home)
@@ -50,6 +56,15 @@ func motivePipeline(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if we made it here, that means we got a valid token and we can run the pipeline
+	for event, subscribers := range events {
+		fmt.Printf("Processing motive data: %s, subscribers: %v\n", event, subscribers)
+		for _, sub := range subscribers {
+			fmt.Printf("event: %s, notifying subscriber: %s\n", event, sub)
+		}
+
+	}
+
+	// return success msg to user
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	response := map[string]string{"status": "success", "msg": "Completed data load from Motive API for new customer"}
