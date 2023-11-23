@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "python-webhook"
+version = "0.1.0"
+description = "Load data from Motive API and update callback URLs with progress"
+authors = ["Haley Morgan <haleymorgan3264@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.0"
+requests = "^2.31.0"
+loguru = "^0.7.2"
+
+[tool.poetry.scripts]
+app = "app:run"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
