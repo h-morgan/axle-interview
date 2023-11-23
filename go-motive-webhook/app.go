@@ -1,9 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
+
+// the structure of the data we expect in motivePipeline POST request
+type Token struct {
+	Value string `json:"token"`
+}
 
 func main() {
 	// Define the routes
@@ -18,7 +24,8 @@ func main() {
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "ok", "msg": "we're up"}`))
+	response := map[string]string{"status": "ok", "msg": "we're up"}
+	json.NewEncoder(w).Encode(response)
 }
 
 func motivePipeline(w http.ResponseWriter, r *http.Request) {
@@ -27,4 +34,24 @@ func motivePipeline(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// check if the json payload is correctly formed
+	var newToken Token
+	err := json.NewDecoder(r.Body).Decode(&newToken)
+	if err != nil {
+		http.Error(w, "Error decoding JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	// check if the json payload has the expected field (token)
+	if newToken.Value == "" {
+		http.Error(w, "Missing API token, required to retrieve Motive data", http.StatusBadRequest)
+		return
+	}
+
+	// if we made it here, that means we got a valid token and we can run the pipeline
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	response := map[string]string{"status": "success", "msg": "Completed data load from Motive API for new customer"}
+	json.NewEncoder(w).Encode(response)
 }
