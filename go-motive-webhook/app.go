@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -23,7 +23,7 @@ func main() {
 	http.HandleFunc("/motive-pipeline", motivePipeline)
 
 	// Start the server on port 8080
-	fmt.Println("Server is listening on port 8080...")
+	log.Println("Server is listening on port 8080...")
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -57,9 +57,14 @@ func motivePipeline(w http.ResponseWriter, r *http.Request) {
 
 	// if we made it here, that means we got a valid token and we can run the pipeline
 	for event, subscribers := range events {
-		fmt.Printf("Processing motive data: %s, subscribers: %v\n", event, subscribers)
+		log.Printf("Processing motive data: %s, subscribers: %v\n", event, subscribers)
+		// retrieve data for specified event/resource
+		data, _ := ExtractMotiveData(newToken.Value, event)
+		// load the data to output storage and send to subscribers
+		output, _ := LoadMotiveData(event, data)
 		for _, sub := range subscribers {
-			fmt.Printf("event: %s, notifying subscriber: %s\n", event, sub)
+			log.Printf("event: %s, notifying subscriber: %s\n", event, sub)
+			RunWebhook(sub, output)
 		}
 
 	}
