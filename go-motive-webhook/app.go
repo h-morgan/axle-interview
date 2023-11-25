@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 // the structure of the data we expect in motivePipeline POST request
@@ -17,14 +19,17 @@ var events = map[string][]string{
 	"trailers": {"https://eoww187fd6vl0sa.m.pipedream.net"},
 }
 
+// var ENV string = os.Getenv("ENV")
+
 func main() {
+	r := mux.NewRouter()
 	// Define the routes
-	http.HandleFunc("/", home)
-	http.HandleFunc("/motive-pipeline", motivePipeline)
+	r.HandleFunc("/", home).Methods(http.MethodGet)
+	r.HandleFunc("/motive-pipeline", motivePipeline).Methods(http.MethodPost)
 
 	// Start the server on port 8080
 	log.Println("Server is listening on port 8080...")
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
