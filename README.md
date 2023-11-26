@@ -112,6 +112,7 @@ This section contains documentation on the endpoints for this service, and their
 ### 5.1 Endpoint: Home
 
 Local URL: 127.0.0.1
+
 AWS URL: http://ec2-3-144-118-104.us-east-2.compute.amazonaws.com
 
 Should receive the following response:
@@ -128,6 +129,7 @@ Should receive the following response:
 To run the webhook/pipeline, make a request to:
 
 Local URL: 127.0.0.1/motive-pipeline
+
 AWS URL: http://ec2-3-144-118-104.us-east-2.compute.amazonaws.com/motive-pipeline
 
 JSON body:
