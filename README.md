@@ -59,6 +59,7 @@ This service does 2 things:
 The data is returned to the callback URL and stored in S3 in the same JSON payload format:
 
 callback URL receiving data: https://eoww187fd6vl0sa.m.pipedream.net
+
 s3 bucket name: axle-motive-data
 
 ```json
@@ -159,7 +160,7 @@ Some of the things I would like to do to improve/expand this service if I was sp
 - Unit tests. I typically use pytest for unit testing (most recent example of this in my [hntpy](https://github.com/h-morgan/hntpy/tree/main/tests) project) but cut this corner in Go for now since I'm not familiar with best practices there.
 - Logic to handle access token refreshing. I left this out because of the small amount of data the service needed to handle, and the expiration time of the tokens being plenty long enough to handle the requests. Production would definitely need this as you can't know upfront if a customer might have large amounts of data that take longer than token expiration time to process. This would require expanding the `/motive-pipeline` expected POST request body to include additional params like `refresh_token` and `expires_at` time.
 - Pagination handling on API requests to Motive. This was something I implemented in the python version of the app, but cut this corner when developing the Go app due to the small amount of data I needed to process not requiring it. Production would definitely need this though, as you never know how much data a customer may have.
-- Better error handling
+- Better error handling.
 - A way to identify the customer so their data can be filed and retrieved. If this is run for mutliple customers/Motive accounts it's not clear who's data we're retrieving.
 - Use terraform or an infrastructre-as-code solution to manage AWS resources.
 - Create more restrictive access between AWS resources through creation of dedicated roles for each service, with access policies for only the services they need access to.
