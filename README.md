@@ -99,13 +99,16 @@ Once all pre-reqs are met, run the build script:
 ./build-push-go.sh
 ```
 
+This uploads a new version of the image with the `:latest` tag. You then need to manually kill the running version of the ECS service. A new version of the ECS service will automatically spin up using the latest image.
+
 ## 5. Service Docs
 
 This section contains documentation on the endpoints for this service, and their expected inputs/outputs.
 
 ### 5.1 Endpoint: Home
 
-URL: 127.0.0.1
+Local URL: 127.0.0.1
+AWS URL: http://ec2-3-144-118-104.us-east-2.compute.amazonaws.com
 
 Should receive the following response:
 
@@ -120,7 +123,8 @@ Should receive the following response:
 
 To run the webhook/pipeline, make a request to:
 
-URL: 127.0.0.1/motive-pipeline
+Local URL: 127.0.0.1/motive-pipeline
+AWS URL: http://ec2-3-144-118-104.us-east-2.compute.amazonaws.com/motive-pipeline
 
 JSON body:
 
@@ -141,6 +145,8 @@ A successful run should result in data being sent to the callback URL, files sav
 }
 ```
 
+If an error is recieved during this process, you will receive an error response with a message containing some hopefully descriptive info about the error.
+
 ## 6. Future considerations
 
 In order to get this project running in a timely manner, I cut some corners I normally would not have cut. This was also my first time developing a service in Go, so there was a learning curve there that took some time away from time I would have otherwise allocated to further development.
@@ -148,6 +154,7 @@ In order to get this project running in a timely manner, I cut some corners I no
 Some of the things I would like to do to improve/expand this service if I was spending more time on it:
 
 - Unit tests. I typically use pytest for unit testing (most recent example of this in my [hntpy](https://github.com/h-morgan/hntpy/tree/main/tests) project) but cut this corner in Go for now since I'm not familiar with best practices there.
-- Logic to handle access token refreshing. I left this out because of the small amount of data the service needed to handle, and the expiration time of the tokens being plenty long enough to handle the requests. Production would definitely need this as you can't know upfront if a customer might have large amounts of data that take longer than token expiration time to process.
+- Logic to handle access token refreshing. I left this out because of the small amount of data the service needed to handle, and the expiration time of the tokens being plenty long enough to handle the requests. Production would definitely need this as you can't know upfront if a customer might have large amounts of data that take longer than token expiration time to process. This would require expanding the `/motive-pipeline` expected POST request body to include additional params like `refresh_token` and `expires_at` time.
 - Pagination handling on API requests to Motive. This was something I implemented in the python version of the app, but cut this corner when developing the Go app due to the small amount of data I needed to process not requiring it. Production would definitely need this though, as you never know how much data a customer may have.
 - Better error handling
+- A way to identify the customer so their data can be filed and retrieved. If this is run for mutliple customers/Motive accounts it's not clear who's data we're retrieving.
