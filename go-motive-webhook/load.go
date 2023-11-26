@@ -31,7 +31,7 @@ func LoadMotiveData(event string, data []interface{}) ([]byte, error) {
 	loadInfo["num_items"] = len(data)
 
 	// save data to s3 (skips if we're not running in prod)
-	key := "data/" + event
+	key := "data/" + event + ".json"
 	jsonData, s3Err := saveToS3(S3_BUCKET, key, loadInfo)
 	if s3Err != nil {
 		fmt.Println("Error:", s3Err)
