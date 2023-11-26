@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -19,7 +20,7 @@ var events = map[string][]string{
 	"trailers": {"https://eoww187fd6vl0sa.m.pipedream.net"},
 }
 
-// var ENV string = os.Getenv("ENV")
+var ENV string = os.Getenv("ENV")
 
 func main() {
 	r := mux.NewRouter()
@@ -28,8 +29,8 @@ func main() {
 	r.HandleFunc("/motive-pipeline", motivePipeline).Methods(http.MethodPost)
 
 	// Start the server on port 8080
-	log.Println("Server is listening on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Println("Server is listening on port 80...")
+	log.Fatal(http.ListenAndServe(":80", r))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -60,16 +61,31 @@ func motivePipeline(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// prepare response map
+	var response map[string]string
+
 	// if we made it here, that means we got a valid token and we can run the pipeline
 	for event, subscribers := range events {
 		log.Printf("Processing motive data: %s, subscribers: %v\n", event, subscribers)
 		// retrieve data for specified event/resource
-		data, _ := ExtractMotiveData(newToken.Value, event)
+		data, extractErr := ExtractMotiveData(newToken.Value, event)
+		if extractErr != nil {
+			response = map[string]string{"status": "error", "msg": extractErr.Error()}
+			break
+		}
 		// load the data to output storage and send to subscribers
-		output, _ := LoadMotiveData(event, data)
+		output, loadErr := LoadMotiveData(event, data)
+		if loadErr != nil {
+			response = map[string]string{"status": "error", "msg": loadErr.Error()}
+			break
+		}
 		for _, sub := range subscribers {
 			log.Printf("event: %s, notifying subscriber: %s\n", event, sub)
-			RunWebhook(sub, output)
+			err := RunWebhook(sub, event, output)
+			if err != nil {
+				response = map[string]string{"status": "error", "msg": err.Error()}
+				break
+			}
 		}
 
 	}
@@ -77,6 +93,8 @@ func motivePipeline(w http.ResponseWriter, r *http.Request) {
 	// return success msg to user
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	response := map[string]string{"status": "success", "msg": "Completed data load from Motive API for new customer"}
+	if len(response) == 0 {
+		response = map[string]string{"status": "success", "msg": "Completed data load from Motive API for new customer"}
+	}
 	json.NewEncoder(w).Encode(response)
 }
