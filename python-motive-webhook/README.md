@@ -1,6 +1,6 @@
 # python-motive-webhook
 
-Since Python is my most comfortable language, I created a first pass of the service in Python. This has the same endpoints and expects the same inputs as the Go service.
+Since Python is my most comfortable language, I created a first pass of the service in Python. This has the same endpoints and expects the same inputs as the Go service. This version is not deployed in AWS and does not use docker/aws resources.
 
 I use poetry for a package manager here. To run this service, first run:
 
@@ -9,7 +9,7 @@ poetry install
 ```
 
 This installs all needed dependencies, as defined in the pyproject.toml file.
-
+git
 Next, run:
 
 ```bash
