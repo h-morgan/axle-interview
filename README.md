@@ -58,10 +58,6 @@ This service does 2 things:
 
 The data is returned to the callback URL and stored in S3 in the same JSON payload format:
 
-callback URL receiving data: https://eoww187fd6vl0sa.m.pipedream.net
-
-s3 bucket name: axle-motive-data
-
 ```json
 {
   "resource": "resource_name",
@@ -70,6 +66,10 @@ s3 bucket name: axle-motive-data
   "data": { "dict": "containing api data response for resource" }
 }
 ```
+
+callback URL receiving data: https://eoww187fd6vl0sa.m.pipedream.net
+
+s3 bucket name: axle-motive-data
 
 ## 3. How to run locally
 
