@@ -15,7 +15,7 @@ The data we retrieve from the Motive API includes:
   - [2.1 Outputs of this service](#21-outputs-of-this-service)
 - [3. How to run locally](#3-how-to-run-locally)
 - [4. How to deploy to prod](#4-how-to-deploy-to-prod-aws-access-needed)
-- [5. Service Docs](#5-serivce-docs)
+- [5. Service Docs](#5-service-docs)
   - [5.1 Endpoint: Home](#51-endpoint-home)
   - [5.2 Endpoint: motive-pipeline](#52-endpoint-motive-pipeline)
 - [6. Future considerations](#6-future-considerations)
