@@ -32,6 +32,9 @@ func ExtractMotiveData(token string, event string) ([]interface{}, error) {
 		fmt.Println("Error:", err)
 		return nil, err
 	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("unable to retrieve %s data from Motive API", event)
+	}
 	defer resp.Body.Close()
 
 	// read the response body
