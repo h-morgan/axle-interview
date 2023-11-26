@@ -16,8 +16,6 @@ import (
 
 var S3_BUCKET string = "axle-motive-data"
 
-// this will be the load metadata that gets built and sent to subscribers
-
 func LoadMotiveData(event string, data []interface{}) ([]byte, error) {
 	var loadInfo = make(map[string]interface{})
 	loadInfo["resource"] = event
@@ -42,13 +40,6 @@ func LoadMotiveData(event string, data []interface{}) ([]byte, error) {
 }
 
 func RunWebhook(url string, event string, jsonData []byte) error {
-
-	// convert final response to JSON payload
-	// jsonData, err := json.Marshal(data)
-	// if err != nil {
-	// 	log.Println("Error:", err)
-	// 	return err
-	// }
 
 	// submit post request to subscriber URL
 	response, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
@@ -93,10 +84,10 @@ func saveToS3(bucket string, s3Key string, data map[string]interface{}) ([]byte,
 			return nil, err
 		}
 
-		// Create an S3 service client
+		// create an S3 service client
 		s3Client := s3.New(s)
 
-		// Upload the JSON data to S3
+		// upload the JSON data to S3
 		_, err = s3Client.PutObject(&s3.PutObjectInput{
 			Bucket: aws.String(bucket),
 			Key:    aws.String(s3Key),
