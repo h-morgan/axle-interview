@@ -161,3 +161,5 @@ Some of the things I would like to do to improve/expand this service if I was sp
 - Pagination handling on API requests to Motive. This was something I implemented in the python version of the app, but cut this corner when developing the Go app due to the small amount of data I needed to process not requiring it. Production would definitely need this though, as you never know how much data a customer may have.
 - Better error handling
 - A way to identify the customer so their data can be filed and retrieved. If this is run for mutliple customers/Motive accounts it's not clear who's data we're retrieving.
+- Use terraform or an infrastructre-as-code solution to manage AWS resources.
+- Create more restrictive access between AWS resources through creation of dedicated roles for each service, with access policies for only the services they need access to.
