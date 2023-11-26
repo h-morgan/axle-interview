@@ -58,6 +58,9 @@ This service does 2 things:
 
 The data is returned to the callback URL and stored in S3 in the same JSON payload format:
 
+callback URL receiving data: https://eoww187fd6vl0sa.m.pipedream.net
+s3 bucket name: axle-motive-data
+
 ```json
 {
   "resource": "resource_name",
