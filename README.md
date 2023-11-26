@@ -73,8 +73,6 @@ s3 bucket name: axle-motive-data
 
 ## 3. How to run locally
 
-Note: you can't use the Pipedream pipeline when running locally. You need to first run Oauth process (either in Postman, or by triggering the Pipedream pipeline). Use the retrieved access token to make requests in Postman/Insomnia or via cURL.
-
 To run the go webhook service locally, clone this repo and build the docker image:
 
 ```
@@ -88,6 +86,8 @@ docker run -p 80:80 --name axle axle
 ```
 
 This spins up the Go service on your localhost, where it will wait for incoming requests with new tokens.
+
+Note: Because the Pipedream pipeline is configured to forward requests to the service running in AWS, you can't use it when running locally. You need to first run the Oauth process (either in Postman, or by triggering the Pipedream pipeline and get the access token from the output of step 2) to retrieve the access token. Use the retrieved access token to make requests in Postman/Insomnia or via cURL.
 
 ## 4. How to deploy to prod (AWS access needed)
 
